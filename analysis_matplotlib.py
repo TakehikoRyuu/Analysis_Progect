@@ -1,45 +1,40 @@
 import matplotlib.pyplot as plt
-from base_model import get_session, User
+from base_model import fetch_data
 
 
-# График распределения возрастов
-def plot_age_distribution():
-    session = get_session()
-    ages = [user.Age for user in session.query(User).all()]
-    plt.hist(ages, bins=10, color='blue', alpha=0.7)
-    plt.title('Распределение возрастов')
-    plt.xlabel('Возраст')
-    plt.ylabel('Количество')
-    plt.show()
-
-
-# График гендерного распределения
 def plot_gender_distribution():
-    session = get_session()
-    genders = [user.Gender for user in session.query(User).all()]
-    plt.bar(*zip(*{gender: genders.count(gender) for gender in set(genders)}.items()), color='green')
+    """
+    Строит гистограмму распределения пользователей по полу.
+    """
+    data = fetch_data(columns=["Gender"])
+    item_counts = data["Gender"].value_counts()
+    plt.bar(item_counts.index, item_counts.values, color='green')
     plt.title('Распределение по полу')
     plt.xlabel('Пол')
     plt.ylabel('Количество')
     plt.show()
 
 
-# График частоты использования
 def plot_usage_frequency():
-    session = get_session()
-    frequencies = [user.Usage_Frequency for user in session.query(User).all()]
-    plt.bar(*zip(*{freq: frequencies.count(freq) for freq in set(frequencies)}.items()), color='orange')
+    """
+    Строит гистограмму распределения пользователей по частоте использования приложения.
+    """
+    data = fetch_data(columns=["Usage_Frequency"])
+    item_counts = data["Usage_Frequency"].value_counts()
+    plt.bar(item_counts.index, item_counts.values, color='orange')
     plt.title('Частота использования')
     plt.xlabel('Частота')
     plt.ylabel('Количество')
     plt.show()
 
 
-# График предпочтений связи
 def plot_preferred_communication():
-    session = get_session()
-    communications = [user.Preferred_Communication for user in session.query(User).all()]
-    plt.bar(*zip(*{comm: communications.count(comm) for comm in set(communications)}.items()), color='purple')
+    """
+    Строит гистограмму распределения пользователей по предпочтений связи.
+    """
+    data = fetch_data(columns=["Gender"])
+    item_counts = data["Gender"].value_counts()
+    plt.bar(item_counts.index, item_counts.values, color='purple')
     plt.title('Предпочитаемый способ связи')
     plt.xlabel('Способ связи')
     plt.ylabel('Количество')
