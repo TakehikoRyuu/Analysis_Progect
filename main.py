@@ -12,19 +12,16 @@ while True:
 
     if choice == '1':
         analysis = importlib.import_module('analysis_matplotlib')
-        print("1. Построить график распределения возрастов")
-        print("2. Построить график распределения по полу")
-        print("3. Построить график частоты использования")
-        print("4. Построить график предпочтений связи")
+        print("1. Построить график распределения по полу")
+        print("2. Построить график частоты использования")
+        print("3. Построить график предпочтений связи")
         sub_choice = input("Введите ваш выбор: ")
 
         if sub_choice == '1':
-            analysis.plot_age_distribution()
-        elif sub_choice == '2':
             analysis.plot_gender_distribution()
-        elif sub_choice == '3':
+        elif sub_choice == '2':
             analysis.plot_usage_frequency()
-        elif sub_choice == '4':
+        elif sub_choice == '3':
             analysis.plot_preferred_communication()
         else:
             print("Неверный выбор. Попробуйте снова.")
