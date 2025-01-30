@@ -1,38 +1,52 @@
 import plotly.express as px
-import pandas as pd
-from base_model import get_session, User
+from base_model import fetch_data
 
 
-# График участников по регионам
 def plot_location_distribution():
-    session = get_session()
-    locations = [user.Location for user in session.query(User).all()]
-    df = pd.DataFrame(locations, columns=['Регион'])
-    fig = px.histogram(df, x='Регион', title='Распределение по регионам')
-    fig.show()
-
-
-# Зависимость пола и типа связи
-def plot_gender_vs_communication():
-    session = get_session()
-    data = [(user.Gender, user.Preferred_Communication) for user in session.query(User).all()]
-    if data:
-        df = pd.DataFrame(data, columns=['Пол', 'Тип связи'])
-        fig = px.bar(df.groupby(['Пол', 'Тип связи']).size().reset_index(name='Количество'),
-                     x='Пол', y='Количество', color='Тип связи', barmode='group',
-                     title='Зависимость пола и типа связи')
+    """
+    Строит график распределения пользователей по регионам.
+    """
+    data = fetch_data(columns=["Location"])
+    if not data.empty:
+        fig = px.histogram(data, x='Location', title='Распределение по регионам')
+        fig.update_layout(
+            xaxis_title="Регион",
+            yaxis_title="Количество пользователей"
+        )
         fig.show()
     else:
         print('Нет данных для построения графика.')
 
 
-# График частоты использования по регионам
+def plot_gender_vs_communication():
+    """
+    Строит график зависимости пола и типа связи.
+    """
+    data = fetch_data(columns=["Gender", "Preferred_Communication"])
+    if not data.empty:
+        grouped_data = data.groupby(['Gender', 'Preferred_Communication']).size().reset_index(name='Количество')
+        fig = px.bar(grouped_data, x='Gender', y='Количество', color='Preferred_Communication', barmode='group',
+        title='Зависимость пола и типа связи', labels={
+            'Gender': 'Пол',  # название для оси X
+            'Preferred_Communication': 'Тип связи',  # название для легенды
+            'Количество': 'Количество пользователей'  # название для оси Y
+        })
+        fig.show()
+    else:
+        print('Нет данных для построения графика.')
+
+
 def plot_frequency_by_location():
-    session = get_session()
-    data = [(user.Location, user.Usage_Frequency) for user in session.query(User).all()]
-    if data:
-        df = pd.DataFrame(data, columns=['Регион', 'Частота использования'])
-        fig = px.histogram(df, x='Регион', color='Частота использования', barmode='group', title='Частота использования по регионам')
+    """
+    Строит график зависимости частоты использования по регионам.
+    """
+    data = fetch_data(columns=["Location", "Usage_Frequency"])
+    if not data.empty:
+        fig = px.histogram(data, x='Location', color='Usage_Frequency', barmode='group',
+                           title='Частота использования по регионам')
+        fig.update_layout(
+            xaxis_title="Регион",
+            yaxis_title="Количество пользователей")
         fig.show()
     else:
         print('Нет данных для построения графика.')
